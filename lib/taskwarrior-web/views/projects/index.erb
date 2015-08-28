@@ -14,8 +14,7 @@
       <% @tasks.each do |proj, tasks| %>
         <section class="project-container" id="project-<%= proj.parameterize %>">
           <h2 class="project">
-            <%= proj %>&nbsp;
-            <a href="/projects/<%= linkify(proj) %>"><i class="icon-circle-arrow-right"></i></a>
+            <a href="/projects/<%= linkify(proj) %>"><%= proj %></a>
           </h2>
           <%= progress_bar(tasks) %>
           <table class="table table-striped table-hover table-sortable">
