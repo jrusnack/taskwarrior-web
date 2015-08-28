@@ -7,6 +7,7 @@ require 'rinku'
 require 'digest'
 require 'sinatra/simple-navigation'
 require 'rack-flash'
+require 'base64'
 
 class TaskwarriorWeb::App < Sinatra::Base
   autoload :Helpers, 'taskwarrior-web/helpers'
@@ -123,7 +124,7 @@ class TaskwarriorWeb::App < Sinatra::Base
 
   delete '/tasks/:uuid/annotations/:description' do
     @task = TaskwarriorWeb::Task.find(params[:uuid]) || not_found
-    TaskwarriorWeb::Annotation.new({ :task_id => @task.uuid, :description => params[:description] }).delete!
+    TaskwarriorWeb::Annotation.new({ :task_id => @task.uuid, :description => Base64.decode64(params[:description]) }).delete!
     flash[:success] = %(Annotation was deleted from "#{@task}")
     redirect back
   end
