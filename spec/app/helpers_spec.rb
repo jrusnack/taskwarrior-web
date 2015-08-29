@@ -16,7 +16,6 @@ describe TaskwarriorWeb::App::Helpers do
         helpers.format_date('2012-01-11 12:23:00').should eq('1/11/2012')
         helpers.format_date('2012-01-11').should eq('1/11/2012')
         helpers.format_date('20121231T230000Z').should eq(Time.parse('20121231T230000Z').localtime.strftime('%-m/%-d/%Y'))
-        helpers.format_date('20121231T230000Z').should eq(Time.parse('20121231T230000Z').strftime('%-m/%-d/%Y'))
       end
     end
 
