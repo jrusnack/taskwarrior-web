@@ -156,6 +156,7 @@ class TaskwarriorWeb::App < Sinatra::Base
   get('/ajax/count/?') { task_count }
   post('/ajax/task-complete/:id/?') { TaskwarriorWeb::Command.new(:complete, params[:id]).run }
   get('/ajax/badge/?') { badge_count }
+  get('/ajax/project-doneness/:project') { project_doneness(params[:project]) }
 
   # Error handling
   not_found do

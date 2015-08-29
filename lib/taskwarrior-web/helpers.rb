@@ -56,13 +56,20 @@ module TaskwarriorWeb::App::Helpers
     total.to_i == 0 ? '' : total.to_s
   end
 
-  def progress_bar(tasks)
+  def progress_bar(tasks, title)
     return 0 if tasks.empty?
     doneness = (tasks.select { |t| t.status == 'completed' }.count.to_f / tasks.count.to_f) * 100
     string = %(<div class="progress progress-striped">)
-    string << %(<div class="bar" style="width: #{doneness.to_i}%;"></div>&nbsp;#{doneness.to_i}%)
+    string << %(<div class="bar project-progress" id="#{title}" style="width: #{doneness.to_i}%;"></div>)
+    string << %(<span class="progress-number" id="#{title}">&nbsp;#{doneness.to_i}%</span>)
     string << %(</div>)
     string
+  end
+
+  def project_doneness(title)
+    tasks = TaskwarriorWeb::Task.query('status.not' => :deleted, :project => title)
+    doneness = (tasks.select { |t| t.status == 'completed' }.count.to_f / tasks.count.to_f) * 100
+    doneness.to_i.to_s
   end
 
   def crud_links(task)

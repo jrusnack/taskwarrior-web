@@ -16,7 +16,7 @@
           <h2 class="project">
             <a href="/projects/<%= linkify(proj) %>"><%= proj %></a>
           </h2>
-          <%= progress_bar(tasks) %>
+          <%= progress_bar(tasks, proj) %>
           <table class="table table-striped table-hover table-sortable">
             <thead>
               <tr>
