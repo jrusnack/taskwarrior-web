@@ -11,19 +11,17 @@
       <thead>
         <tr>
           <% if params[:status] == 'pending' %><th class="no-sort"></th><% end %>
-          <th>Description</th>
-          <th>Project</th>
-          <th>Due</th>
+          <% if can_edit %><th class="no-sort"></th><% end %>
           <%= 
             case params[:status]
             when 'waiting' then '<th>Hidden until</th>'
-            when 'completed' then '<th>Completed on</th>'
+            when 'completed' then '<th>Completed</th>'
             when 'deleted' then '<th>Deleted on</th>'
             end
           %>
-          <th>Tags</th>
+          <th class="no-sort" style="width: 100%">Description</th>
+          <th>Project</th>
           <th data-sort-map='{"H": 0, "M": 1, "": 2, "L": 3}'>Priority</th>
-          <% if can_edit %><th class="no-sort"></th><% end %>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +30,13 @@
             <% if task.status == 'pending' %>
               <td><input type="checkbox" class="complete" data-task-id="<%= task.uuid %>" /></td>
             <% end %>
+            <% if can_edit %><td><%= crud_links(task) %></td><% end %>
+            <%= 
+              case params[:status]
+              when 'waiting' then '<td>' + (format_date(task.wait) unless task.wait.nil?) + '</td>'
+              when 'completed', 'deleted' then '<td>' + (format_date(task.end) unless task.end.nil?) + '</td>'
+              end
+            %>
             <td>
               <%= task.description %>
               <% unless task.annotations.empty? %>
@@ -47,16 +52,7 @@
               <% end %>
             </td>
             <td><a href="/projects/<%= linkify(task.project) %>"><%= task.project %></a></td>
-            <td><%= format_date(task.due) unless task.due.nil? %></td>
-            <%= 
-              case params[:status]
-              when 'waiting' then '<td>' + (format_date(task.wait) unless task.wait.nil?) + '</td>'
-              when 'completed', 'deleted' then '<td>' + (format_date(task.end) unless task.end.nil?) + '</td>'
-              end
-            %>
-            <td><%= format_tags(task.tags) unless task.tags.nil? %></td>
             <td><%= task.priority unless task.priority.nil? %></td>
-            <% if can_edit %><td><%= crud_links(task) %></td><% end %>
           </tr>
         <% end %>
       </tbody>
