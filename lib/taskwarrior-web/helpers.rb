@@ -59,7 +59,7 @@ module TaskwarriorWeb::App::Helpers
   def progress_bar(tasks, title)
     return 0 if tasks.empty?
     doneness = (tasks.select { |t| t.status == 'completed' }.count.to_f / tasks.count.to_f) * 100
-    string = %(<div class="progress progress-striped">)
+    string = %(<div class="progress">)
     string << %(<div class="bar project-progress" id="#{title}" style="width: #{doneness.to_i}%;"></div>)
     string << %(<span class="progress-number" id="#{title}">&nbsp;#{doneness.to_i}%</span>)
     string << %(</div>)
@@ -76,7 +76,7 @@ module TaskwarriorWeb::App::Helpers
     string = %(<span class="crud-links">)
     string << %(<a class="annotation-add" href="/tasks/#{task.uuid}/annotations/new"><i class="icon-comment"></i></a>)
     string << %(&nbsp;|&nbsp;)
-    string << %(<a href="/tasks/#{task.uuid}?destination=#{ERB::Util.u(request.path_info)}"><i class="icon-pencil"></i></a>)
+    string << %(<a class="task-button" href="/tasks/#{task.uuid}?destination=#{ERB::Util.u(request.path_info)}"><i class="icon-pencil"></i></a>)
     string << %(&nbsp;|&nbsp;)
     string << %(<a href="/tasks/#{task.uuid}?destination=#{ERB::Util.u(request.path_info)}" data-method="DELETE" data-confirm="Are you sure you want to delete this task?"><i class="icon-trash"></i></a>)
     string << %(</span>)

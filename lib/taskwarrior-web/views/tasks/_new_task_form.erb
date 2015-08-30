@@ -1,0 +1,24 @@
+<script>
+  $(document).ready(function() {
+    $('input[name="task[description]"]').focus();
+  });
+</script>
+
+<form action="/tasks<%= '?destination='+ERB::Util.u(params[:destination]) if params[:destination] %>" method="POST" class="modal-form form-horizontal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+		  	<h3>Create new task</h3>
+		  </div>
+		  <div class="modal-body">
+
+			  	<%= erb :'tasks/_form' %>
+			
+		  </div>
+		  <div class="modal-footer">
+		    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  	<button type="submit" class="btn btn-primary">Create task</button>
+		  </div>
+		</div>
+	</div>
+</form>

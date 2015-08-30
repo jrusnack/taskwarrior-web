@@ -66,6 +66,10 @@ html, body { height: 100%; }
 
 tr.completed td { text-decoration: line-through; }
 
+.modal-body {
+    max-height: 800px;
+}
+
 /** Prevents crud links from being broken onto lines **/
 span.crud-links { white-space: nowrap; }
 

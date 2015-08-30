@@ -55,7 +55,7 @@ class TaskwarriorWeb::App < Sinatra::Base
   get '/tasks/new/?' do
     @title = 'New Task'
     @date_format = TaskwarriorWeb::Config.dateformat(:js) || 'm/d/yyyy'
-    erb :'tasks/new'
+    erb :'tasks/_new_task_form', :layout => false
   end
 
   post '/tasks/?' do
@@ -68,21 +68,21 @@ class TaskwarriorWeb::App < Sinatra::Base
     end
 
     flash.now[:error] = @task._errors.join(', ')
-    erb :'tasks/new'
+    erb :'tasks/_new_task_form', :layout => false
   end
 
   get '/tasks/:uuid/?' do
     not_found unless TaskwarriorWeb::Config.supports?(:editing)
     @task = TaskwarriorWeb::Task.find(params[:uuid]) || not_found
-    @title = %(Editing "#{@task}")
     @date_format = TaskwarriorWeb::Config.dateformat(:js) || 'm/d/yyyy'
-    erb :'tasks/edit'
+    erb :'tasks/_edit_task_form', :layout => false
   end
 
   patch '/tasks/:uuid/?' do
     not_found unless TaskwarriorWeb::Config.supports?(:editing) && TaskwarriorWeb::Task.exists?(params[:uuid])
 
     @task = TaskwarriorWeb::Task.new(params[:task])
+    $stderr.puts @task.inspect
     if @task.is_valid?
       message = @task.save!
       flash[:success] = message.blank? ? %(Task "#{@task}" was successfully updated) : message
@@ -90,7 +90,7 @@ class TaskwarriorWeb::App < Sinatra::Base
     end
 
     flash.now[:error] = @task._errors.join(', ')
-    erb :'tasks/edit'
+    erb :'tasks/_edit_task_form', :layout => false
   end
 
   delete '/tasks/:uuid' do
