@@ -6,7 +6,8 @@ module TaskwarriorWeb::CommandBuilder::Base
     :add => 'add',
     :update => TaskwarriorWeb::Config.version.major >= 2 ? ':id mod' : nil,
     :delete => 'rc.confirmation=no :id delete',
-    :query => TaskwarriorWeb::Config.version > '1.9.2' ? '_query' : 'export',
+    :find => "export :id",
+    :query =>  "export",
     :complete => ':id done',
     :annotate => ':id annotate',
     :denotate => ':id denotate',
@@ -20,6 +21,7 @@ module TaskwarriorWeb::CommandBuilder::Base
       substitute_parts if @command_string =~ /:id/
     end
     parse_params
+    $stderr.puts "Built command: #{@command_string}#{@params}"
     @built = "#{@command_string}#{@params}"
   end
 
@@ -34,7 +36,7 @@ module TaskwarriorWeb::CommandBuilder::Base
 
   def substitute_parts
     if @id
-      @command_string.gsub!(':id', "uuid:#{@id.to_s}")
+      @command_string.gsub!(':id', "#{@id.to_s}")
       return self
     end
     raise TaskwarriorWeb::CommandBuilder::MissingTaskIDError

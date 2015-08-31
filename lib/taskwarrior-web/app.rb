@@ -103,6 +103,7 @@ class TaskwarriorWeb::App < Sinatra::Base
 
   # Annotations
   get '/tasks/:uuid/annotations/new.?:format?' do
+    $stderr.puts  TaskwarriorWeb::Task.find(params[:uuid]).inspect
     @task = TaskwarriorWeb::Task.find(params[:uuid]) || not_found
     @json = params[:format] == 'json'
     erb :'tasks/_annotation_form', :layout => !@json
@@ -132,10 +133,10 @@ class TaskwarriorWeb::App < Sinatra::Base
   # Projects
   get '/projects/overview/?' do
     @title = 'Projects'
-    @tasks = TaskwarriorWeb::Task.query('status.not' => :deleted, 'project.not' => '')
+    @tasks = TaskwarriorWeb::Task.query('status.not' => :deleted, 'project.any' => '')
       .sort_by! { |t| [t.active? ? 0 : 1, -t.urgency.to_f, t.priority.nil?.to_s, t.priority.to_s, t.due.nil?.to_s, t.due.to_s] }
       .group_by { |t| t.project.to_s }
-      .reject { |project, tasks| tasks.select { |task| task.status == 'pending' }.empty? }
+      .reject { |project, tasks| tasks.select { |task| ['pending', 'waiting'].include? task.status }.empty? }
     erb :'projects/index'
   end
 

@@ -29,7 +29,7 @@
             <% if task.status == 'pending' %>
               <td><input type="checkbox" class="complete" data-task-id="<%= task.uuid %>" /></td>
             <% end %>
-            <% if can_edit %><td><%= crud_links(task) %></td><% end %>
+            <% if can_edit %><td><%= crud_links(task) %>&nbsp</td><% end %>
             <%= 
               case params[:status]
               when 'waiting' then '<td>' + (format_date(task.wait) unless task.wait.nil?) + '</td>'

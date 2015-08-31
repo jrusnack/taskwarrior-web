@@ -64,8 +64,6 @@ html, body { height: 100%; }
 #push, #footer { height: 70px; }
 #footer .container > * { margin: 20px 0; }
 
-tr.completed td { text-decoration: line-through; }
-
 .modal-body {
     max-height: 800px;
 }

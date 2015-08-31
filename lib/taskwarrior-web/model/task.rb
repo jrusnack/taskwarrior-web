@@ -40,7 +40,9 @@ module TaskwarriorWeb
       @tags = value.is_a?(String) ? value.split(/[, ]+/).reject(&:empty?) : value
 
       if @uuid
-        @remove_tags = Task.find_by_uuid(uuid).first.tags - @tags
+        current_tags = Task.find(uuid).tags
+        current_tags = current_tags.nil? ? [] : current_tags
+        @remove_tags = current_tags - @tags
       end
     end
 
@@ -63,7 +65,7 @@ module TaskwarriorWeb
     end
 
     def to_hash
-      Hash[instance_variables.select { |var| !var.to_s.start_with?('@_') }.map { |var| [var[1..-1].to_sym, instance_variable_get(var)] }]
+      Hash[(instance_variables - [:'@uuid']).select { |var| !var.to_s.start_with?('@_') }.map { |var| [var[1..-1].to_sym, instance_variable_get(var)] }]
     end
 
     def to_s
@@ -78,7 +80,7 @@ module TaskwarriorWeb
     # Get a single task by UUID or ID. Returns nil if no such task was found.
 
     def self.find(uuid)
-      tasks = Parser.parse(Command.new(:query, nil, :uuid => uuid).run)
+      tasks = Parser.parse(Command.new(:find, uuid, nil).run)
       tasks.empty? ? nil : Task.new(tasks.first)
     end
 

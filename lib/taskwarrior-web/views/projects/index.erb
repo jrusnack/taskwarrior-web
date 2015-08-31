@@ -17,45 +17,50 @@
             <a href="/projects/<%= linkify(proj) %>"><%= proj %></a>
           </h2>
           <%= progress_bar(tasks, proj) %>
-          <table class="table table-striped table-hover table-sortable">
-            <thead>
-              <tr>
-                <th class="no-sort"></th>
-                <th class="no-sort"></th>
-                <th class="no-sort" style="width: 100%">Description</th>                
-              </tr>
-            </thead>
-            <tbody>
-              <% tasks.each do |task| %>
-                <tr class="<%= colorize_date(task.due) if task.active? %> <%= task.status %>">
-                  <td>
-                    <% if task.status == 'pending' %>
-                      <input type="checkbox" class="complete" data-task-id="<%= task.uuid %>" />
-                    <% end %>
-                  </td>
-                  <% if @can_edit %><td><%= crud_links(task) if task.active? %></td><% end %>
-                  <td>
-                    <%= task.description %>
-                    <% unless task.annotations.empty? %>
-                      <ul>
-                        <% task.annotations.each do |annotation| %>
-                          <li>
-                            <small>
-                            <%= format_date(annotation.entry) %>: <%= auto_link(ERB::Util.h(annotation.description)) %>
-                            &nbsp;
-                            <a href="/tasks/<%= task.uuid %>/annotations/<%= Base64.encode64(annotation.description) %>" data-method="DELETE" data-confirm="Are you sure you want to delete this annotation?"><i class="icon-trash"></i></a>
-                            </small>
-                          </li>
-                        <% end %>
-                      </ul>
-                    <% end %>
-                  </td>                  
+
+          <% if tasks.select {|t| t.status == 'pending'}.size == 0 %>
+            No pending tasks
+          <% else %>
+            <table class="table table-striped table-hover table-sortable">
+              <thead>
+                <tr>
+                  <th class="no-sort"></th>
+                  <th class="no-sort"></th>
+                  <th class="no-sort" style="width: 100%"></th>                
                 </tr>
-              <% end %>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <% tasks.each do |task| %>
+                  <% next if task.status != 'pending' %>
+                  <tr class="<%= colorize_date(task.due) if task.active? %> <%= task.status %>">
+                    <td>
+                        <input type="checkbox" class="complete" data-task-id="<%= task.uuid %>" data-project-id="<%= task.project %>" />
+                    </td>
+                    <% if @can_edit %><td><%= crud_links(task) %>&nbsp</td><% end %>
+                    <td>
+                      <%= task.description %>
+                      <% unless task.annotations.empty? %>
+                        <ul>
+                          <% task.annotations.each do |annotation| %>
+                            <li>
+                              <small>
+                              <%= format_date(annotation.entry) %>: <%= auto_link(ERB::Util.h(annotation.description)) %>
+                              &nbsp;
+                              <a href="/tasks/<%= task.uuid %>/annotations/<%= Base64.encode64(annotation.description) %>" data-method="DELETE" data-confirm="Are you sure you want to delete this annotation?"><i class="icon-trash"></i></a>
+                              </small>
+                            </li>
+                          <% end %>
+                        </ul>
+                      <% end %>
+                    </td>                  
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% end %>
         </section>
-        <hr class="section-separator" />
+        <div class="col-xs-12" style="height:60px;"></div>
+        <!-- <hr class="section-separator" /> -->
       <% end %>
     </div>
   </div>

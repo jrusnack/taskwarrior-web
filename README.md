@@ -13,6 +13,8 @@ wonderful [Taskwarrior](http://taskwarrior.org/) todo application.
 * `ruby` >= 1.9 (support for `ruby` < 1.9 is very unlikely, but pull requests
   are gladly accepted).
 
+* `task` >= 2.4.2
+
 ## Installation
 
 `gem install taskwarrior-web`
